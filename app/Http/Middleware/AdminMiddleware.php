@@ -14,13 +14,15 @@ class AdminMiddleware
      *
      * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
      */
-    public function handle(Request $request, Closure $next): Response
-    {
-        if (!Auth::check()) {
+    public function handle(Request $request, Closure $next): Response{
+        /** @var User $user */
+        $user = Auth::user();
+
+        if (!$user) {
             return redirect()->route('login');
         }
 
-        if (!Auth::user()->isAdmin()) {
+        if (!$user->isAdmin()) {
             abort(403, 'Akses ditolak. Anda tidak memiliki izin admin.');
         }
 
